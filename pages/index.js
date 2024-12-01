@@ -117,8 +117,8 @@ export default function Home() {
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #c9d1d9;
-            color: #0d1117;
+            background-color: #0d1117;
+            color: #c9d1d9;
             display: flex;
             flex-direction: column;
             height: 100vh; /* Menjadikan tinggi halaman penuh */
