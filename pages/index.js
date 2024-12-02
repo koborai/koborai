@@ -12,6 +12,7 @@ export default function Home() {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         />
+        <link rel="icon" href="/img/icon.png" />
       </Head>
       <div className="navbar">
         <div className="logo">
@@ -22,15 +23,16 @@ export default function Home() {
           <i className="fas fa-user-circle"></i>
         </div>
       </div>
+      
+      
       <div className="content">
-        <h1>
-          <i className="fas fa-home"></i>Dashboard
-        </h1>
+        <h1><i className="fas fa-home"></i>Dashboard</h1>
         <p>Selamat datang di website ku 🥶🤩🥳🗿.</p>
         <div className="card">
           <h2>Welcome to Minn!</h2>
           <p>Siap memulai hari dengan senyuman😏</p>
         </div>
+        
         <div className="overview">
           <div className="item">
             <h3>Waktu Lokal</h3>
