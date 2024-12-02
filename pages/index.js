@@ -171,10 +171,6 @@ export default function Home() {
             <div className="value blue" id="countdown">Loading...</div>
           </div>
           <div className="item">
-            <h3>Baterai</h3>
-            <div className="value blue" id="battery">Loading...</div>
-          </div>
-          <div className="item">
             <h3>Tools Canggih 🥶</h3>
             <div className="value blue">
               <div className="tools">
@@ -203,7 +199,6 @@ export default function Home() {
         Made with <i className="fas fa-heart"></i> by Minn.
       </div>
       <Script src="js/countdown.js"></Script>
-      <Script src="js/battery.js"></Script>
       <Script src="js/jam.js"></Script>
       <Script src="js/ping.js"></Script>
     </>
