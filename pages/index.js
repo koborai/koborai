@@ -10,6 +10,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Dashboard</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="icon" href="/img/icon.png" />
         <style>{`
           body {
             margin: 0;
@@ -166,16 +167,12 @@ export default function Home() {
             <div className="value blue" id="internetSpeed">Loading...</div>
           </div>
           <div className="item">
-            <h3>Kata Kata Hari ini 🖐🏻</h3>
-            <div className="value blue" id="quote">Loading...</div>
-          </div>
-          <div className="item">
             <h3>Menuju Ramadhan 1446 H</h3>
             <div className="value blue" id="countdown">Loading...</div>
           </div>
           <div className="item">
-            <h3>Battery Level</h3>
-            <div className="value blue" id="batteryLevel">Loading...</div>
+            <h3>Baterai</h3>
+            <div className="value blue" id="battery">Loading...</div>
           </div>
           <div className="item">
             <h3>Tools Canggih 🥶</h3>
@@ -205,11 +202,10 @@ export default function Home() {
       <div className="footer">
         Made with <i className="fas fa-heart"></i> by Minn.
       </div>
-      <Script src="js/battrey.js"></Script>
       <Script src="js/countdown.js"></Script>
+      <Script src="js/battery.js"></Script>
       <Script src="js/jam.js"></Script>
       <Script src="js/ping.js"></Script>
-      <Script src="js/qoute.js"></Script>
     </>
   );
 }
