@@ -23,6 +23,9 @@ export default function YoutubePage() {
       });
     }
 
+    // Memastikan updateQualityOptions dipanggil saat pertama kali komponen dimuat
+    updateQualityOptions(); // Menambahkan pemanggilan fungsi langsung setelah render pertama kali
+
     async function fetchVideoDetails() {
       const url = document.getElementById("url").value;
       const type = document.getElementById("mediaType").value;
@@ -92,8 +95,6 @@ export default function YoutubePage() {
         downloadButton.textContent = "Download";
       }
     }
-
-    document.addEventListener("DOMContentLoaded", updateQualityOptions);
   }, []);
 
   return (
