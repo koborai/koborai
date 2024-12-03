@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
     const result = {
       author: "Minn",
-      cover: data.cover || "Tidak tersedia",
+      cover: data.video?.cover || data.video?.dynamic_cover || data.video?.origin_cover || "Tidak tersedia",
       title: data.title || "Tidak tersedia",
       videoUrl: data.video?.noWatermark || "Tidak tersedia",
       duration: data.video?.durationFormatted || "Tidak tersedia",

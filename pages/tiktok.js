@@ -4,6 +4,7 @@ export default function TikTokPage() {
   const [url, setUrl] = useState("");
   const [downloadInfo, setDownloadInfo] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
     if (!url) {
@@ -13,6 +14,7 @@ export default function TikTokPage() {
 
     setError("");
     setDownloadInfo(null);
+    setLoading(true);
 
     try {
       const response = await fetch(`/api/tiktok?url=${encodeURIComponent(url)}`);
@@ -21,11 +23,27 @@ export default function TikTokPage() {
       if (response.ok) {
         setDownloadInfo(data);
       } else {
-        setError(data.message || "Gagal mengambil data.");
+        setError(data.message || "Pastikan URL yang kamu masukan sudah benar!.");
       }
     } catch (err) {
       setError("Terjadi kesalahan pada server.");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleVideoDownload = (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "video.mp4"; // Nama file yang akan diunduh
+    link.click();
+  };
+
+  const handleMusicDownload = (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "music.mp3"; // Nama file musik yang akan diunduh
+    link.click();
   };
 
   return (
@@ -135,8 +153,6 @@ export default function TikTokPage() {
         .footer i {
             color: #ff7b72;
         }
-
-        /* Styles for input and button */
         .input-container {
             margin-top: 20px;
         }
@@ -169,18 +185,30 @@ export default function TikTokPage() {
             font-size: 18px;
             margin-bottom: 5px;
         }
-        .download-info a {
-            color: #58a6ff;
+        .download-info img {
+            max-width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
         }
-        
-        //untuk icon tools canggih
+        .download-info a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background-color: #58a6ff;
+        }
+        .download-info a:hover {
+            background-color: #4a94d6;
+        }
         .tools {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-            gap: 20px; /* Space between the items */
+            grid-template-columns: 1fr;
+            gap: 20px;
             margin-top: 20px;
         }
-
         .tool {
             text-align: center;
             background-color: #161b22;
@@ -190,59 +218,23 @@ export default function TikTokPage() {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 5px solid #161b32;
         }
-
         .tool i {
             font-size: 40px;
             color: #58a6ff;
         }
-
-        .tool p {
-            font-size: 12px;
-            color: #8b949e;
-            margin-top: 8px;
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #58a6ff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
         }
-
-        .iconraiso {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the space */
-        }
-        .input-container input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #58a6ff;
-          border-radius: 5px;
-          background-color: #0d1117;
-          color: #c9d1d9;
-        }
-        .input-container button {
-          margin-top: 10px;
-          padding: 10px;
-          border: none;
-          border-radius: 5px;
-          background-color: #58a6ff;
-          color: white;
-          cursor: pointer;
-          font-size: 16px;
-        }
-        .download-info img {
-          max-width: 100%;
-          border-radius: 10px;
-        }
-        .download-info a {
-          display: inline-block;
-          padding: 10px 20px;
-          margin: 10px 0;
-          border-radius: 5px;
-          text-decoration: none;
-          color: white;
-          background-color: #58a6ff;
-        }
-        .download-info a:hover {
-          background-color: #4a94d6;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         `}</style>
       </head>
@@ -265,7 +257,9 @@ export default function TikTokPage() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <button onClick={handleDownload}>Download</button>
+              <button onClick={handleDownload} disabled={loading}>
+                {loading ? "Memproses..." : "Download"}
+              </button>
             </div>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {downloadInfo && (
@@ -273,14 +267,17 @@ export default function TikTokPage() {
                 <h3>{downloadInfo.title}</h3>
                 <img src={downloadInfo.cover} alt="Video Thumbnail" />
                 <p>Durasi: {downloadInfo.duration}</p>
-                <a href={downloadInfo.videoUrl} download>
-                  Download Video
-                </a>
-                <a href={downloadInfo.musicUrl} download>
-                  Download Musik
-                </a>
+                <div>
+                  <button onClick={() => handleVideoDownload(downloadInfo.videoUrl)}>
+                    Download Video
+                  </button>
+                  <button onClick={() => handleMusicDownload(downloadInfo.musicUrl)}>
+                    Download Musik
+                  </button>
+                </div>
               </div>
             )}
+            {loading && <div className="loading-spinner"></div>}
           </div>
         </div>
       </body>
