@@ -20,10 +20,22 @@ export default function TikTokPage() {
     setResult(null);
 
     try {
-      const response = await fetch(`/api/tiktok?url=${encodeURIComponent(urlInput)}`);
+      const response = await fetch(`/api/tiktok`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          url: urlInput,
+          // Include any other required parameters here
+          hash: "aHR0cHM6Ly92dC50aWt0b2suY29tL1pTakdWRmNTMy8=1032YWlvLWRs",
+          token: "e784127b33f9d3d92597677969f6fd57e7aaa8aa88330fb0a7aeb30378dae968",
+        }),
+      });
+
       const data = await response.json();
 
-      if (data.status === "ok") {
+      if (data.url) {
         setResult(data);
       } else {
         setError(data.msg || "Terjadi kesalahan. Coba lagi nanti.");
@@ -113,7 +125,7 @@ export default function TikTokPage() {
         input {
           width: calc(100% - 24px);
           padding: 12px;
-          margin-bottom: 20px;
+          margin-bottom: 20 px;
           border: 2px solid #ced4da;
           border-radius: 8px;
           font-size: 16px;
@@ -136,7 +148,7 @@ export default function TikTokPage() {
 
         .result {
           margin-top: 20px;
-          background: #f8f9fa ;
+          background: #f8f9fa;
           padding: 15px;
           border-radius: 8px;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
