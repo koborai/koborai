@@ -263,11 +263,14 @@ export default function TikTokPage() {
       </head>
       <body>
         <div className="navbar">
-          <div className="logo">
-            <i className="fas fa-angle-double-right"></i>
-            <span>MINN</span>
-          </div>
+        <div className="logo">
+          <i className="fas fa-angle-double-right"></i>
+          <span>MINN</span>
         </div>
+        <div className="icons">
+          <i className="fas fa-user-circle"></i>
+        </div>
+      </div>
         <div className="content">
           <h1>
             <i className="fas fa-download"></i> TikTok Video & Music Downloader
@@ -291,11 +294,15 @@ export default function TikTokPage() {
                 <img src={downloadInfo.cover} alt="Video Thumbnail" />
                 <p>Durasi: {downloadInfo.duration}</p>
                 <div>
-                  <button onClick={() => handleVideoDownload(downloadInfo.videoUrl)}>
-                    Download Video
+                  <button
+                     onClick={() => window.open(downloadInfo.videoUrl, "_blank")}
+                  >
+                   Download Video
                   </button>
-                  <button onClick={() => handleMusicDownload(downloadInfo.musicUrl)}>
-                    Download Musik
+                  <button
+                     onClick={() => window.open(downloadInfo.musicUrl, "_blank")}
+                  >
+                   Download Musik
                   </button>
                 </div>
               </div>
@@ -303,6 +310,9 @@ export default function TikTokPage() {
             {loading && <div className="loading-spinner"></div>}
           </div>
         </div>
+       <div className="footer">
+        Made with <i className="fas fa-heart"></i> by Minn.
+      </div>
       </body>
     </html>
   );
