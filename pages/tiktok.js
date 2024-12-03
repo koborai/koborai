@@ -21,7 +21,7 @@ export default function TikTokPage() {
       if (response.ok) {
         setDownloadInfo(data);
       } else {
-        setError(data.message || "Gagal mengambil data.");
+        setError(data.message || "Pastikan URL yang kamu masukan sudah benar!.");
       }
     } catch (err) {
       setError("Terjadi kesalahan pada server.");
