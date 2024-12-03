@@ -1,0 +1,175 @@
+<html lang="en">
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Dashboard</title> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> 
+  <link rel="icon" href="/img/icon.png" />
+      <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full height */
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #161b22;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .logo i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .navbar .icons i {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+        .content {
+            padding: 20px;
+            flex-grow: 1; /* Fill remaining space */
+        }
+        .content h1 {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+        }
+        .content h1 i {
+            margin-right: 10px;
+        }
+        .content p {
+            font-size: 14px;
+            color: #8b949e;
+        }
+        .card {
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 14px;
+            color: #8b949e;
+        }
+        .card a {
+            display: block;
+            color: #58a6ff;
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: auto; /* Ensure footer is at the bottom */
+        }
+        .footer i {
+            color: #ff7b72;
+        }
+        .form-group {
+            margin-top: 20px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #58a6ff;
+            border-radius: 5px;
+            background-color: #161b22;
+            color: #c9d1d9;
+        }
+        .form-group button {
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #58a6ff;
+            color: white;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #007bff;
+        }
+     </style>
+ </head> 
+ <body> 
+  <div class="navbar"> 
+   <div class="logo"> 
+    <i class="fas fa-angle-double-right"></i> 
+    <span>MINN</span> 
+   </div> 
+   <div class="icons"> 
+    <i class="fas fa-user-circle"></i> 
+   </div> 
+  </div> 
+  <div class="content"> 
+   <h1><i class="fas fa-home"></i>Tiktok Downloader</h1> 
+   <div class="card"> 
+    <form id="downloadForm">
+        <div class="form-group">
+            <input type="text" id="tiktokUrl" placeholder="Enter TikTok video URL" required />
+        </div>
+        <div class="form-group">
+            <button type="submit">Download Video</button>
+        </div>
+    </form>
+    <div id="result"></div>
+   </div> 
+  </div> 
+  <div class="footer">
+    Made with 
+   <i class="fas fa-heart"></i> by Minn. 
+  </div> 
+
+  <script>
+    document.getElementById('downloadForm').addEvent Listener('submit', function(event) {
+        event.preventDefault();
+        const url = document.getElementById('tiktokUrl').value;
+        const data = new URLSearchParams();
+        data.append('url', url);
+        data.append('hash', 'aHR0cHM6Ly92dC50aWt0b2suY29tL1pTakdWRmNTMy8=1032YWlvLWRs');
+        data.append('token', 'e784127b33f9d3d92597677969f6fd57e7aaa8aa88330fb0a7aeb30378dae968');
+
+        fetch('https://tokdl.com/wp-json/aio-dl/video-data/', {
+            method: 'POST',
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Origin': 'https://tokdl.com',
+                'Referer': 'https://tokdl.com/tiktok-video-downloader/',
+                'User -Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+            },
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            if (data.url) {
+                resultDiv.innerHTML = `<h2>${data.title}</h2>
+                                       <img src="${data.thumbnail}" alt="Thumbnail" />
+                                       <p>Duration: ${data.duration}</p>
+                                       <a href="${data.medias[0].url}" target="_blank">Download Video (HD)</a>`;
+            } else {
+                resultDiv.innerHTML = '<p>Error: Unable to fetch video data.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerHTML = '<p>Error: Unable to fetch video data.</p>';
+        });
+    });
+  </script>
+ </body>
+</html>
