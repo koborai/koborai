@@ -65,7 +65,7 @@ export default function TikTokPage() {
             color: #c9d1d9;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Menjadikan tinggi halaman penuh */
+            height: 100vh;
         }
         .navbar {
             display: flex;
@@ -82,13 +82,9 @@ export default function TikTokPage() {
             font-size: 24px;
             margin-right: 10px;
         }
-        .navbar .icons i {
-            font-size: 20px;
-            margin-left: 20px;
-        }
         .content {
             padding: 20px;
-            flex-grow: 1; /* Memanfaatkan ruang yang tersisa */
+            flex-grow: 1;
         }
         .content h1 {
             display: flex;
@@ -97,10 +93,6 @@ export default function TikTokPage() {
         }
         .content h1 i {
             margin-right: 10px;
-        }
-        .content p {
-            font-size: 14px;
-            color: #8b949e;
         }
         .card {
             background-color: #161b22;
@@ -115,43 +107,6 @@ export default function TikTokPage() {
         .card p {
             font-size: 14px;
             color: #8b949e;
-        }
-        .card a {
-            display: block;
-            color: #58a6ff;
-            margin-top: 10px;
-        }
-        .overview {
-            margin-top: 20px;
-        }
-        .overview .item {
-            background-color: #161b22;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-        .overview .item h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        .overview .item .value {
-            font-size: 24px;
-        }
-        .overview .item .value.blue {
-            color: #58a6ff;
-        }
-        .overview .item .value.red {
-            color: #ff7b72;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 12px;
-            color: #8b949e;
-            margin-top: auto; /* Memastikan footer berada di bawah */
-        }
-        .footer i {
-            color: #ff7b72;
         }
         .input-container {
             margin-top: 20px;
@@ -202,29 +157,6 @@ export default function TikTokPage() {
         }
         .download-info a:hover {
             background-color: #4a94d6;
-        }
-        .download-info button {
-            margin: 10px 0; /* Memberikan jarak antara tombol */
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .download-info button:first-child {
-            background-color: #58a6ff; /* Warna tombol Download Video */
-            color: white;
-        }
-        .download-info button:first-child:hover {
-            background-color: #4a94d6;
-        }
-        .download-info button:last-child {
-            background-color: #ff7b72; /* Warna tombol Download Musik */
-            color: white;
-        }
-        .download-info button:last-child:hover {
-            background-color: #e66b61;
         }
         .tools {
             display: grid;
