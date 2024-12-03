@@ -34,6 +34,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+<<<<<<< HEAD
     // Ambil data yang diminta dari respons JSON
     const result = {
       title: data.title || "Tidak tersedia",
@@ -43,6 +44,16 @@ export default async function handler(req, res) {
     };
 
     res.status(200).json(result);
+=======
+    // Log the response for debugging
+    console.log("Response from TikTok API:", data);
+
+    if (response.ok) {
+      res.status(200).json(data);
+    } else {
+      res.status(response.status).json(data);
+    }
+>>>>>>> 120509613e06b688de59938fd34cd1974c075529
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ message: "Terjadi kesalahan pada server." });
