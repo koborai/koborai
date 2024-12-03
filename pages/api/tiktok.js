@@ -1,38 +1,50 @@
 // pages/api/tiktok.js
 
 export default async function handler(req, res) {
-  const { url } = req.body;
+  const { url } = req.query;
 
   if (!url) {
     return res.status(400).json({ message: "URL video diperlukan." });
   }
 
   try {
-    const response = await fetch("https://tokdl.com/wp-json/aio-dl/video-data/", {
-      method: "POST",
+    const apiUrl = `https://tiklok-down.vercel.app/api/download?url=${encodeURIComponent(url)}`;
+
+    const response = await fetch(apiUrl, {
+      method: "GET",
       headers: {
-        "Accept": "*/*",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": "https://tokdl.com",
-        "Referer": "https://tokdl.com/tiktok-video-downloader/",
-        "User -Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7,ru;q=0.6",
+        Referer: "https://tiklok-down.vercel.app/",
+        "Sec-Ch-Ua": '"Not.A.Brand";v="99", "Chromium";v="124"',
+        "Sec-Ch-Ua-Mobile": "?1",
+        "Sec-Ch-Ua-Platform": '"Android"',
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent":
+          "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
       },
-      body: new URLSearchParams({
-        url: url,
-        hash: "aHR0cHM6Ly92dC50aWt0b2suY29tL1pTakdWRmNTMy8=1032YWlvLWRs",
-        token: "e784127b33f9d3d92597677969f6fd57e7aaa8aa88330fb0a7aeb30378dae968",
-      }),
     });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ message: "Gagal mengambil data." });
+    }
 
     const data = await response.json();
 
-    if (response.ok) {
-      res.status(200).json(data);
-    } else {
-      res.status(response.status).json(data);
-    }
+    // Ambil data yang diminta dari respons JSON
+    const result = {
+      title: data.title || "Tidak tersedia",
+      videoUrl: data.video?.noWatermark || "Tidak tersedia",
+      duration: data.video?.durationFormatted || "Tidak tersedia",
+      musicUrl: data.music?.play_url || "Tidak tersedia",
+    };
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan." });
+    res.status(500).json({ message: "Terjadi kesalahan pada server." });
   }
 }
