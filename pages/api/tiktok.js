@@ -27,12 +27,14 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ message: "Gagal mengambil data." });
+      return res.status(response.status).json({ message: "Pastikan URL yang kamu masukan sudah benar!." });
     }
 
     const data = await response.json();
 
     const result = {
+      author: "Minn",
+      cover: data.cover || "Tidak tersedia",
       title: data.title || "Tidak tersedia",
       videoUrl: data.video?.noWatermark || "Tidak tersedia",
       duration: data.video?.durationFormatted || "Tidak tersedia",

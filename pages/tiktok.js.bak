@@ -1,3 +1,5 @@
+// pages/tiktok.js
+
 import { useState } from "react";
 
 export default function TikTokPage() {
@@ -33,7 +35,7 @@ export default function TikTokPage() {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>TikTok Downloader</title>
+        <title>Tiktok Downloader</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -210,40 +212,6 @@ export default function TikTokPage() {
             border-radius: 50%; /* Makes the image circular */
             object-fit: cover; /* Ensures the image covers the space */
         }
-        .input-container input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #58a6ff;
-          border-radius: 5px;
-          background-color: #0d1117;
-          color: #c9d1d9;
-        }
-        .input-container button {
-          margin-top: 10px;
-          padding: 10px;
-          border: none;
-          border-radius: 5px;
-          background-color: #58a6ff;
-          color: white;
-          cursor: pointer;
-          font-size: 16px;
-        }
-        .download-info img {
-          max-width: 100%;
-          border-radius: 10px;
-        }
-        .download-info a {
-          display: inline-block;
-          padding: 10px 20px;
-          margin: 10px 0;
-          border-radius: 5px;
-          text-decoration: none;
-          color: white;
-          background-color: #58a6ff;
-        }
-        .download-info a:hover {
-          background-color: #4a94d6;
-        }
         `}</style>
       </head>
       <body>
@@ -252,36 +220,51 @@ export default function TikTokPage() {
             <i className="fas fa-angle-double-right"></i>
             <span>MINN</span>
           </div>
+          <div className="icons">
+            <i className="fas fa-user-circle"></i>
+          </div>
         </div>
         <div className="content">
           <h1>
-            <i className="fas fa-download"></i> TikTok Video & Music Downloader
+            <i className="fas fa-home"></i> Download TikTok Video and Music
           </h1>
           <div className="card">
             <div className="input-container">
               <input
                 type="text"
-                placeholder="Masukkan URL TikTok"
+                id="tiktok-url"
+                placeholder="Enter TikTok video URL"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <button onClick={handleDownload}>Download</button>
+              <button id="download-btn" onClick={handleDownload}>
+                Download
+              </button>
             </div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && (
+              <p style={{ color: "red", marginTop: "10px" }}>{error}</p>
+            )}
             {downloadInfo && (
-              <div className="download-info">
-                <h3>{downloadInfo.title}</h3>
-                <img src={downloadInfo.cover} alt="Video Thumbnail" />
-                <p>Durasi: {downloadInfo.duration}</p>
-                <a href={downloadInfo.videoUrl} download>
+              <div className="download-info" id="download-info">
+                <h3>Download Information:</h3>
+                <p id="video-title">Title: {downloadInfo.title}</p>
+                <p>
+                  Duration: <span id="video-duration">{downloadInfo.duration}</span>
+                </p>
+                <a id="video-link" href={downloadInfo.videoUrl} target="_blank" rel="noopener noreferrer">
                   Download Video
                 </a>
-                <a href={downloadInfo.musicUrl} download>
-                  Download Musik
+                <br />
+                <a id="music-link" href={downloadInfo.musicUrl} target="_blank" rel="noopener noreferrer">
+                  Download Music
                 </a>
               </div>
             )}
           </div>
+          <div className="overview"></div>
+        </div>
+        <div className="footer">
+          Made with <i className="fas fa-heart"></i> by Minn.
         </div>
       </body>
     </html>
