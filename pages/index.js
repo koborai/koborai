@@ -174,19 +174,19 @@ export default function Home() {
             <h3>Tools Canggih 🥶</h3>
             <div className="value blue">
               <div className="tools">
-                <div className="tool" onClick={() => location.href='ai/index.html'} style={{ cursor: 'pointer' }}>
+                <div className="tool" onClick={() => location.href='ai'} style={{ cursor: 'pointer' }}>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGasxVFZcsVJOjtnOKZ3kNSmjHr90on75mIg&s" alt="Ai Logo" className="iconraiso" />
                   <p>AI MINN</p>
                 </div>
-                <div className="tool" onClick={() => location.href='ytdown/index.html'} style={{ cursor: 'pointer' }}>
+                <div className="tool" onClick={() => location.href='youtube'} style={{ cursor: 'pointer' }}>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm3axEBte-WbkphWcq-8TEL3uaC2pqwZtCDg&s" alt="YouTube Logo" className="iconraiso" />
                   <p>YouTube Downloader</p>
                 </div>
-                <div className="tool" onClick={() => location.href='ttdown/index.html'} style={{ cursor: 'pointer' }}>
+                <div className="tool" onClick={() => location.href='ttdown'} style={{ cursor: 'pointer' }}>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNQpL3Ug5SkM7E2npe9NGwkOxsCVRBQM0AAHNsTB3GV-Vx1kZ7852nthM&s=10" alt="TikTok Logo" className="iconraiso" />
                   <p>TikTok Downloader</p>
                 </div>
-                <div className="tool" onClick={() => location.href='ngl/index.html'} style={{ cursor: 'pointer' }}>
+                <div className="tool" onClick={() => location.href='ngl'} style={{ cursor: 'pointer' }}>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwJ5uKFQGVR9PdZ6tArI-qtZX9VSqaNxV5g&s" alt="NGL Logo" className="iconraiso" />
                   <p>NGL</p>
                 </div>
