@@ -26,6 +26,9 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // Log the response for debugging
+    console.log("Response from TikTok API:", data);
+
     if (response.ok) {
       res.status(200).json(data);
     } else {
