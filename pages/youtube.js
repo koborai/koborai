@@ -1,101 +1,96 @@
 import Head from "next/head";
-import Link from "next/link";
-import Script from 'next/script';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function YoutubePage() {
+  const [mediaType, setMediaType] = useState('video');
+  const [qualityOptions, setQualityOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const qualityOptions = {
       video: ['144p', '240p', '360p', '480p', '720p'],
       audio: ['128kbps', '192kbps']
     };
 
-    function updateQualityOptions() {
-      const mediaType = document.getElementById("mediaType").value;
-      const qualitySelect = document.getElementById("quality");
-      qualitySelect.innerHTML = '';
+    const updateQualityOptions = () => {
+      const options = qualityOptions[mediaType];
+      setQualityOptions(options);
+    };
 
-      qualityOptions[mediaType].forEach(quality => {
-        const option = document.createElement("option");
-        option.value = quality.replace('p', '').replace('kbps', '');
-        option.textContent = quality;
-        qualitySelect.appendChild(option);
-      });
+    updateQualityOptions(); // Call the function when component is mounted
+  }, [mediaType]);
+
+  const fetchVideoDetails = async () => {
+    const url = document.getElementById("url").value;
+    const type = mediaType;
+    const quality = document.getElementById("quality").value;
+    const resultDiv = document.getElementById("result");
+    const downloadButton = document.getElementById("downloadButton");
+
+    if (!url) {
+      alert("Please enter a YouTube URL.");
+      return;
     }
 
-    // Memastikan updateQualityOptions dipanggil saat pertama kali komponen dimuat
-    updateQualityOptions(); // Menambahkan pemanggilan fungsi langsung setelah render pertama kali
+    try {
+      setLoading(true);
+      downloadButton.disabled = true;
+      downloadButton.textContent = "Loading...";
 
-    async function fetchVideoDetails() {
-      const url = document.getElementById("url").value;
-      const type = document.getElementById("mediaType").value;
-      const quality = document.getElementById("quality").value;
-      const resultDiv = document.getElementById("result");
-      const downloadButton = document.getElementById("downloadButton");
+      const response = await fetch(`https://cdn59.savetube.su/info?url=${encodeURIComponent(url)}`);
+      const data = await response.json();
 
-      if (!url) {
-        alert("Please enter a YouTube URL.");
+      if (data.status === false) {
+        resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
         return;
       }
 
-      try {
-        downloadButton.disabled = true;
-        downloadButton.textContent = "Loading...";
-
-        const response = await fetch(`https://cdn59.savetube.su/info?url=${encodeURIComponent(url)}`);
-        const data = await response.json();
-
-        if (data.status === false) {
-          resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
-          return;
-        }
-
-        const videoData = data.data;
-        resultDiv.innerHTML = `
-          <h3>${videoData.title}</h3>
-          <img src="${videoData.thumbnail_formats[0].url}" id="thumbnail" alt="Thumbnail">
-          <p>Duration: ${videoData.durationLabel}</p>
-          <p><a href="#" onclick="downloadMedia('${type}', '${quality}', '${videoData.key}')">Download ${type === 'audio' ? 'Audio' : 'Video'}</a></p>
-        `;
-      } catch (error) {
-        console.error("Error fetching video details:", error);
-        resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-      } finally {
-        downloadButton.disabled = false;
-        downloadButton.textContent = "Download";
-      }
+      const videoData = data.data;
+      resultDiv.innerHTML = `
+        <h3>${videoData.title}</h3>
+        <img src="${videoData.thumbnail_formats[0].url}" id="thumbnail" alt="Thumbnail">
+        <p>Duration: ${videoData.durationLabel}</p>
+        <p><a href="#" onClick={() => downloadMedia(type, quality, videoData.key)}>Download ${type === 'audio' ? 'Audio' : 'Video'}</a></p>
+      `;
+    } catch (error) {
+      console.error("Error fetching video details:", error);
+      resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+    } finally {
+      setLoading(false);
+      downloadButton.disabled = false;
+      downloadButton.textContent = "Download";
     }
+  };
 
-    async function downloadMedia(type, quality, key) {
-      const resultDiv = document.getElementById("result");
-      const downloadButton = document.getElementById("downloadButton");
+  const downloadMedia = async (type, quality, key) => {
+    const resultDiv = document.getElementById("result");
+    const downloadButton = document.getElementById("downloadButton");
 
-      try {
-        downloadButton.disabled = true;
-        downloadButton.textContent = "Downloading...";
+    try {
+      downloadButton.disabled = true;
+      downloadButton.textContent = "Downloading...";
 
-        const url = type === 'audio'
-          ? `https://cdn51.savetube.su/download/audio/${quality}/${key}`
-          : `https://cdn51.savetube.su/download/video/${quality}/${key}`;
+      const url = type === 'audio'
+        ? `https://cdn51.savetube.su/download/audio/${quality}/${key}`
+        : `https://cdn51.savetube.su/download/video/${quality}/${key}`;
 
-        const response = await fetch(url);
-        const data = await response.json();
+      const response = await fetch(url);
+      const data = await response.json();
 
-        if (data && data.data && data.data.downloadUrl) {
-          const downloadUrl = data.data.downloadUrl;
-          window.open(downloadUrl, "_blank");
-        } else {
-          resultDiv.innerHTML = "<p>Download URL tidak ditemukan.</p>";
-        }
-      } catch (error) {
-        console.error("Error downloading media:", error);
-        resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-      } finally {
-        downloadButton.disabled = false;
-        downloadButton.textContent = "Download";
+      if (data && data.data && data.data.downloadUrl) {
+        const downloadUrl = data.data.downloadUrl;
+        window.open(downloadUrl, "_blank");
+      } else {
+        resultDiv.innerHTML = "<p>Download URL tidak ditemukan.</p>";
       }
+    } catch (error) {
+      console.error("Error downloading media:", error);
+      resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+    } finally {
+      downloadButton.disabled = false;
+      downloadButton.textContent = "Download";
     }
-  }, []);
+  };
 
   return (
     <>
@@ -185,12 +180,20 @@ export default function YoutubePage() {
         <div className="card">
           <p>Download video youtube dengan mudah🔥</p>
           <input type="text" id="url" placeholder="Masukkan URL YouTube" />
-          <select id="mediaType" onChange={updateQualityOptions}>
+          <select id="mediaType" onChange={(e) => setMediaType(e.target.value)}>
             <option value="video">Video</option>
             <option value="audio">Audio</option>
           </select>
-          <select id="quality"></select>
-          <button id="downloadButton" onClick={fetchVideoDetails}>Download</button>
+          <select id="quality">
+            {qualityOptions.map((quality, index) => (
+              <option key={index} value={quality.replace('p', '').replace('kbps', '')}>
+                {quality}
+              </option>
+            ))}
+          </select>
+          <button id="downloadButton" onClick={fetchVideoDetails} disabled={loading}>
+            {loading ? "Loading..." : "Download"}
+          </button>
           <div id="result"></div>
         </div>
       </div>
