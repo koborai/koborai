@@ -182,7 +182,7 @@ export default function Home() {
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm3axEBte-WbkphWcq-8TEL3uaC2pqwZtCDg&s" alt="YouTube Logo" className="iconraiso" />
                   <p>YouTube Downloader</p>
                 </div>
-                <div className="tool" onClick={() => location.href='ttdown'} style={{ cursor: 'pointer' }}>
+                <div className="tool" onClick={() => location.href='tiktok'} style={{ cursor: 'pointer' }}>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNQpL3Ug5SkM7E2npe9NGwkOxsCVRBQM0AAHNsTB3GV-Vx1kZ7852nthM&s=10" alt="TikTok Logo" className="iconraiso" />
                   <p>TikTok Downloader</p>
                 </div>
