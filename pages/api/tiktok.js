@@ -34,8 +34,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-<<<<<<< HEAD
-    // Ambil data yang diminta dari respons JSON
+
     const result = {
       title: data.title || "Tidak tersedia",
       videoUrl: data.video?.noWatermark || "Tidak tersedia",
