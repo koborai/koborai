@@ -1,205 +1,324 @@
-import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function YoutubePage() {
-  const [mediaType, setMediaType] = useState('video');
-  const [qualityOptions, setQualityOptions] = useState([]);
+export default function YouTubePage() {
+  const [url, setUrl] = useState("");
+  const [format, setFormat] = useState("720"); // Default format
+  const [downloadInfo, setDownloadInfo] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const qualityOptions = {
-      video: ['144p', '240p', '360p', '480p', '720p'],
-      audio: ['128kbps', '192kbps']
-    };
-
-    const updateQualityOptions = () => {
-      const options = qualityOptions[mediaType];
-      setQualityOptions(options);
-    };
-
-    updateQualityOptions(); // Call the function when component is mounted
-  }, [mediaType]);
-
-  const fetchVideoDetails = async () => {
-    const url = document.getElementById("url").value;
-    const type = mediaType;
-    const quality = document.getElementById("quality").value;
-    const resultDiv = document.getElementById("result");
-    const downloadButton = document.getElementById("downloadButton");
-
+  const handleDownload = async () => {
     if (!url) {
-      alert("Please enter a YouTube URL.");
+      setError("Harap masukkan URL YouTube.");
       return;
     }
 
-    try {
-      setLoading(true);
-      downloadButton.disabled = true;
-      downloadButton.textContent = "Loading...";
+    setError("");
+    setDownloadInfo(null);
+    setLoading(true);
 
-      const response = await fetch(`https://cdn59.savetube.su/info?url=${encodeURIComponent(url)}`);
+    try {
+      const response = await fetch(
+        `/api/youtube?url=${encodeURIComponent(url)}&format=${encodeURIComponent(
+          format
+        )}`
+      );
       const data = await response.json();
 
-      if (data.status === false) {
-        resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
-        return;
+      if (response.ok) {
+        setDownloadInfo(data);
+      } else {
+        setError(data.message || "Pastikan URL yang kamu masukkan sudah benar!.");
       }
-
-      const videoData = data.data;
-      resultDiv.innerHTML = `
-        <h3>${videoData.title}</h3>
-        <img src="${videoData.thumbnail_formats[0].url}" id="thumbnail" alt="Thumbnail">
-        <p>Duration: ${videoData.durationLabel}</p>
-        <p><a href="#" onClick={() => downloadMedia(type, quality, videoData.key)}>Download ${type === 'audio' ? 'Audio' : 'Video'}</a></p>
-      `;
-    } catch (error) {
-      console.error("Error fetching video details:", error);
-      resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+    } catch (err) {
+      setError("Terjadi kesalahan pada server.");
     } finally {
       setLoading(false);
-      downloadButton.disabled = false;
-      downloadButton.textContent = "Download";
-    }
-  };
-
-  const downloadMedia = async (type, quality, key) => {
-    const resultDiv = document.getElementById("result");
-    const downloadButton = document.getElementById("downloadButton");
-
-    try {
-      downloadButton.disabled = true;
-      downloadButton.textContent = "Downloading...";
-
-      const url = type === 'audio'
-        ? `https://cdn51.savetube.su/download/audio/${quality}/${key}`
-        : `https://cdn51.savetube.su/download/video/${quality}/${key}`;
-
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data && data.data && data.data.downloadUrl) {
-        const downloadUrl = data.data.downloadUrl;
-        window.open(downloadUrl, "_blank");
-      } else {
-        resultDiv.innerHTML = "<p>Download URL tidak ditemukan.</p>";
-      }
-    } catch (error) {
-      console.error("Error downloading media:", error);
-      resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-    } finally {
-      downloadButton.disabled = false;
-      downloadButton.textContent = "Download";
     }
   };
 
   return (
-    <>
-      <Head>
-        <meta charset="UTF-8" />
+    <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Youtube Downloader</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <title>YouTube Downloader</title>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
         <link rel="icon" href="/img/icon.png" />
         <style>{`
-          body {
+        body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-          }
-          .navbar {
+            height: 100vh; /* Menjadikan tinggi halaman penuh */
+        }
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: #161b22 ;
-          }
-          .navbar .logo {
+            background-color: #161b22;
+        }
+        .navbar .logo {
             display: flex;
             align-items: center;
-          }
-          .navbar .logo i {
+        }
+        .navbar .logo i {
             font-size: 24px;
             margin-right: 10px;
-          }
-          .navbar .icons i {
+        }
+        .navbar .icons i {
             font-size: 20px;
             margin-left: 20px;
-          }
-          .content {
+        }
+        .content {
             padding: 20px;
-            flex-grow: 1;
-          }
-          .content h1 {
+            flex-grow: 1; /* Memanfaatkan ruang yang tersisa */
+        }
+        .content h1 {
             display: flex;
             align-items: center;
             font-size: 24px;
-          }
-          .content h1 i {
+        }
+        .content h1 i {
             margin-right: 10px;
-          }
-          .card {
+        }
+        .content p {
+            font-size: 14px;
+            color: #8b949e;
+        }
+        .card {
             background-color: #161b22;
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
-          }
-          .card p {
+        }
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .card p {
             font-size: 14px;
             color: #8b949e;
-          }
-          .footer {
+        }
+        .card a {
+            display: block;
+            color: #58a6ff;
+            margin-top: 10px;
+        }
+        .overview {
+            margin-top: 20px;
+        }
+        .overview .item {
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .overview .item h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .overview .item .value {
+            font-size: 24px;
+        }
+        .overview .item .value.blue {
+            color: #58a6ff;
+        }
+        .overview .item .value.red {
+            color: #ff7b72;
+        }
+        .footer {
             text-align: center;
             padding: 20px;
             font-size: 12px;
             color: #8b949e;
-            margin-top: auto;
-          }
-          .footer i {
+            margin-top: auto; /* Memastikan footer berada di bawah */
+        }
+        .footer i {
             color: #ff7b72;
-          }
-          #result {
+        }
+        .input-container {
             margin-top: 20px;
-          }
+        }
+        .input-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #58a6ff;
+            border-radius: 5px;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        .input-container button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #58a6ff;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .input-container button:hover {
+            background-color: #4a94d6;
+        }
+        .download-info {
+            margin-top: 20px;
+            color: #c9d1d9;
+        }
+        .download-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .download-info img {
+            max-width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+        .download-info a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background-color: #58a6ff;
+        }
+        .download-info a:hover {
+            background-color: #4a94d6;
+        }
+        .download-info button {
+            margin: 10px 0; /* Memberikan jarak antara tombol */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .download-info button:first-child {
+            background-color: #58a6ff; /* Warna tombol Download Video */
+            color: white;
+        }
+        .download-info button:first-child:hover {
+            background-color: #4a94d6;
+        }
+        .download-info button:last-child {
+            background-color: #ff7b72; /* Warna tombol Download Musik */
+            color: white;
+        }
+        .download-info button:last-child:hover {
+            background-color: #e66b61;
+        }
+        .tools {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .tool {
+            text-align: center;
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .tool i {
+            font-size: 40px;
+            color: #58a6ff;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #58a6ff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         `}</style>
-      </Head>
-      <div className="navbar">
-        <div className="logo">
-          <i className="fas fa-angle-double-right"></i>
-          <span>MINN</span>
+      </head>
+      <body>
+        <div className="navbar">
+          <div className="logo">
+            <i className="fas fa-angle-double-right"></i>
+            <span>MINN</span>
+          </div>
+          <div className="icons">
+            <i className="fas fa-user-circle"></i>
+          </div>
         </div>
-        <div className="icons">
-          <i className="fas fa-user-circle"></i>
+        <div className="content">
+          <h1>
+            <i className="fas fa-download"></i> YouTube Video & Music Downloader
+          </h1>
+          <div className="card">
+            <div className="input-container">
+              <input
+                type="text"
+                placeholder="Masukkan URL YouTube"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+              <select
+                value={format}
+                onChange={(e) => setFormat(e.target.value)}
+                style={{
+                  marginTop: "10px",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  border: "1px solid #58a6ff",
+                  backgroundColor: "#0d1117",
+                  color: "#c9d1d9",
+                }}
+              >
+                <option value="mp3">MP3 (Audio)</option>
+                <option value="360">360p (Video)</option>
+                <option value="480">480p (Video)</option>
+                <option value="720">720p (Video)</option>
+                <option value="1080">1080p (Video)</option>
+                <option value="1440">1440p (Video)</option>
+                {/* Tambahkan opsi lainnya */}
+              </select>
+              <button onClick={handleDownload} disabled={loading}>
+                {loading ? "Memproses..." : "Download"}
+              </button>
+            </div>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            {downloadInfo && (
+              <div className="download-info">
+                <h3>{downloadInfo.title}</h3>
+                <img src={downloadInfo.thumbnail} alt="Video Thumbnail" />
+                <div>
+                  <button
+                    onClick={() => window.open(downloadInfo.downloadUrl, "_blank")}
+                  >
+                    Download
+                  </button>
+                </div>
+              </div>
+            )}
+            {loading && <div className="loading-spinner"></div>}
+          </div>
         </div>
-      </div>
-      <div className="content">
-        <h1><i className="fas fa-home"></i>Youtube Downloader</h1>
-        <div className="card">
-          <p>Download video youtube dengan mudah🔥</p>
-          <input type="text" id="url" placeholder="Masukkan URL YouTube" />
-          <select id="mediaType" onChange={(e) => setMediaType(e.target.value)}>
-            <option value="video">Video</option>
-            <option value="audio">Audio</option>
-          </select>
-          <select id="quality">
-            {qualityOptions.map((quality, index) => (
-              <option key={index} value={quality.replace('p', '').replace('kbps', '')}>
-                {quality}
-              </option>
-            ))}
-          </select>
-          <button id="downloadButton" onClick={fetchVideoDetails} disabled={loading}>
-            {loading ? "Loading..." : "Download"}
-          </button>
-          <div id="result"></div>
+        <div className="footer">
+          Made with <i className="fas fa-heart"></i> by Minn.
         </div>
-      </div>
-      <div className="footer">
-        Made with <i className="fas fa-heart"></i> by Minn.
-      </div>
-    </>
+      </body>
+    </html>
   );
 }
