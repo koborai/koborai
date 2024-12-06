@@ -17,7 +17,7 @@ export default function NGLPage() {
       .then((res) => res.json())
       .then((data) => {
         const deviceInfo = parseDeviceInfo(navigator.userAgent);
-        setUser Info({
+        setUserInfo({
           ip: data.ip,
           userAgent: navigator.userAgent,
           device: deviceInfo,
