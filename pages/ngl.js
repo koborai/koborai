@@ -276,7 +276,8 @@ PESAN: ${message}`,
           {success && (
             <div className="popup-success">
               <div className="popup-content">
-                <i className="fas fa-check-circle"></i <p>Pesan berhasil dikirim!</p>
+                <i className="fas fa-check-circle"></i>
+                <p>Pesan berhasil dikirim!</p>
                 <button className="popup-close" onClick={closePopup}>
                   OK
                 </button>
