@@ -5,7 +5,7 @@ export default function NGLPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [userInfo, setUser Info] = useState({
+  const [userInfo, setUserInfo] = useState({
     ip: "Tidak diketahui",
     userAgent: navigator.userAgent,
     device: "Tidak diketahui",
