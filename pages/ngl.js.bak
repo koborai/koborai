@@ -31,13 +31,18 @@ export default function NGLPage() {
   const parseDeviceInfo = (userAgent) => {
     const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
     const match = userAgent.match(deviceRegex);
-    return match ? match[0].trim() : "Tidak diketahui";
+    if (match) {
+      const deviceDetails = match[0].trim() || "Tidak diketahui";
+      return deviceDetails;
+    }
+    return "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
     const chatId = "1516343905";
+    const username = "minn";
 
     if (message.trim() === "") {
       alert("Pesan tidak boleh kosong!");
@@ -250,7 +255,7 @@ PESAN: ${message}`,
         </div>
         <div className="content">
           <h1>
-            <i className="fas fa-download"></i> NGL - MIN
+            <i className="fas fa-user-circle"></i> NGL - MIN
           </h1>
           <div className="form-container">
             <form onSubmit={handleSubmit}>

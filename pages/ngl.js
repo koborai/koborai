@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import Head from "next/head";
+import { useState, useEffect } from "react";
 
 export default function NGLPage() {
   const [message, setMessage] = useState("");
@@ -31,18 +31,13 @@ export default function NGLPage() {
   const parseDeviceInfo = (userAgent) => {
     const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
     const match = userAgent.match(deviceRegex);
-    if (match) {
-      const deviceDetails = match[0].trim() || "Tidak diketahui";
-      return deviceDetails;
-    }
-    return "Tidak diketahui";
+    return match ? match[0].trim() : "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
-    const chatId = "1516343905";
-    const username = "minn";
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN; // Simpan token di .env
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID; // Simpan chat ID di .env
 
     if (message.trim() === "") {
       alert("Pesan tidak boleh kosong!");
@@ -255,7 +250,7 @@ PESAN: ${message}`,
         </div>
         <div className="content">
           <h1>
-            <i className="fas fa-download"></i> NGL - MIN
+            <i className="fas fa-user-circle"></i> NGL - MIN
           </h1>
           <div className="form-container">
             <form onSubmit={handleSubmit}>
