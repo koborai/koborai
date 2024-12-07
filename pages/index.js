@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import Script from 'next/script';
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 export default function Home() {
   return (
