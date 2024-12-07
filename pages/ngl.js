@@ -35,7 +35,8 @@ export default function NGLPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Mencegah halaman refresh
+
     const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
     const chatId = "1516343905";
 
@@ -66,12 +67,13 @@ PESAN: ${message}`,
       );
 
       if (response.ok) {
-        setMessage("");
-        setSuccess(true);
+        setMessage(""); // Reset form
+        setSuccess(true); // Tampilkan popup sukses
       } else {
         alert("Gagal mengirim pesan. Coba lagi.");
       }
     } catch (error) {
+      console.error("Error saat mengirim pesan:", error);
       alert("Terjadi kesalahan. Coba lagi.");
     } finally {
       setLoading(false);
@@ -244,9 +246,6 @@ PESAN: ${message}`,
             <i className="fas fa-angle-double-right"></i>
             <span>MINN</span>
           </div>
-          <div className="icons">
-            <i className="fas fa-user-circle"></i>
-          </div>
         </div>
         <div className="content">
           <h1>
@@ -254,10 +253,6 @@ PESAN: ${message}`,
           </h1>
           <div className="form-container">
             <form onSubmit={handleSubmit}>
-              <div>
-                <div className="username">@minn</div>
-                <div className="message">kirimi aku pesan anonim!</div>
-              </div>
               <textarea
                 className="message-box"
                 value={message}
@@ -265,9 +260,6 @@ PESAN: ${message}`,
                 placeholder="Kirim pesan anonim padaku..."
                 disabled={loading}
               ></textarea>
-              <div className="info">
-                <i className="fas fa-lock lock-icon"></i> tanya-jawab anonim
-              </div>
               <button type="submit" className="send-button" disabled={loading}>
                 {loading ? "Mengirim..." : "Kirim !"}
               </button>
@@ -275,18 +267,10 @@ PESAN: ${message}`,
           </div>
           {success && (
             <div className="popup-success">
-              <div className="popup-content">
-                <i className="fas fa-check-circle"></i>
-                <p>Pesan berhasil dikirim!</p>
-                <button className="popup-close" onClick={closePopup}>
-                  OK
-                </button>
-              </div>
+              <p>Pesan berhasil dikirim!</p>
+              <button onClick={closePopup}>OK</button>
             </div>
           )}
-        </div>
-        <div className="footer">
-          Made with <i className="fas fa-heart"></i> by Minn.
         </div>
       </body>
     </>
