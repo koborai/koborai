@@ -28,8 +28,8 @@ export default function NGLPage() {
       });
   }, []);
   
-  const botToken = "123456789:ABCDEF123456789abcdef123456789X"; // Ganti dengan token Anda
-  const chatId = "-123456789"; // Ganti dengan chat ID Anda
+  const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
+  const chatId = "1516343905";
 
   const parseDeviceInfo = (userAgent) => {
     const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
@@ -37,13 +37,8 @@ export default function NGLPage() {
     return match ? match[0].trim() : "Tidak diketahui";
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
     if (!botToken || !chatId) {
-      alert("Token atau Chat ID belum diatur di .env");
+      alert("Token atau Chat ID belum diatur");
       return;
     }
 
