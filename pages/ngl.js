@@ -1,3 +1,5 @@
+Perbaiki kode ini agar tampilannya sesuai tema dan rapi susunannya dan efeknya juga modern dan responsif 
+
 import { useState, useEffect } from "react";
 import Head from "next/head";
 
@@ -31,14 +33,18 @@ export default function NGLPage() {
   const parseDeviceInfo = (userAgent) => {
     const deviceRegex = /(Android|iPhone|iPad|Windows Phone|Macintosh|Linux|Realme C11|Samsung|Xiaomi|Huawei|Oppo|Vivo|Nokia|Sony|LG|HTC|OnePlus|Google Pixel|Motorola|Asus|Lenovo|BlackBerry|ZTE|TCL|Alcatel|Microsoft)/i;
     const match = userAgent.match(deviceRegex);
-    return match ? match[0].trim() : "Tidak diketahui";
+    if (match) {
+      const deviceDetails = match[0].trim() || "Tidak diketahui";
+      return deviceDetails;
+    }
+    return "Tidak diketahui";
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Mencegah halaman refresh
-
+    e.preventDefault();
     const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
     const chatId = "1516343905";
+    const username = "minn";
 
     if (message.trim() === "") {
       alert("Pesan tidak boleh kosong!");
@@ -67,13 +73,12 @@ PESAN: ${message}`,
       );
 
       if (response.ok) {
-        setMessage(""); // Reset form
-        setSuccess(true); // Tampilkan popup sukses
+        setMessage("");
+        setSuccess(true);
       } else {
         alert("Gagal mengirim pesan. Coba lagi.");
       }
     } catch (error) {
-      console.error("Error saat mengirim pesan:", error);
       alert("Terjadi kesalahan. Coba lagi.");
     } finally {
       setLoading(false);
@@ -246,6 +251,9 @@ PESAN: ${message}`,
             <i className="fas fa-angle-double-right"></i>
             <span>MINN</span>
           </div>
+          <div className="icons">
+            <i className="fas fa-user-circle"></i>
+          </div>
         </div>
         <div className="content">
           <h1>
@@ -253,6 +261,10 @@ PESAN: ${message}`,
           </h1>
           <div className="form-container">
             <form onSubmit={handleSubmit}>
+              <div>
+                <div className="username">@minn</div>
+                <div className="message">kirimi aku pesan anonim!</div>
+              </div>
               <textarea
                 className="message-box"
                 value={message}
@@ -260,6 +272,9 @@ PESAN: ${message}`,
                 placeholder="Kirim pesan anonim padaku..."
                 disabled={loading}
               ></textarea>
+              <div className="info">
+                <i className="fas fa-lock lock-icon"></i> tanya-jawab anonim
+              </div>
               <button type="submit" className="send-button" disabled={loading}>
                 {loading ? "Mengirim..." : "Kirim !"}
               </button>
@@ -267,10 +282,18 @@ PESAN: ${message}`,
           </div>
           {success && (
             <div className="popup-success">
-              <p>Pesan berhasil dikirim!</p>
-              <button onClick={closePopup}>OK</button>
+              <div className="popup-content">
+                <i className="fas fa-check-circle"></i>
+                <p>Pesan berhasil dikirim!</p>
+                <button className="popup-close" onClick={closePopup}>
+                  OK
+                </button>
+              </div>
             </div>
           )}
+        </div>
+        <div className="footer">
+          Made with <i className="fas fa-heart"></i> by Minn.
         </div>
       </body>
     </>
