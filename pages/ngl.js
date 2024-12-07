@@ -1,5 +1,3 @@
-Perbaiki kode ini agar tampilannya sesuai tema dan rapi susunannya dan efeknya juga modern dan responsif 
-
 import { useState, useEffect } from "react";
 import Head from "next/head";
 
