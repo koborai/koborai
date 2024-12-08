@@ -1,8 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
 import Link from "next/link";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
 
 export default function YouTubePage() {
   const [url, setUrl] = useState("");
